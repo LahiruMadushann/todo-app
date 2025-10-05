@@ -29,6 +29,7 @@ const App: React.FC = () => {
   const handleCompleteTask = async (id: number) => {
     try {
       await dispatch(completeTask(id)).unwrap();
+      dispatch(fetchTasks());
     } catch (err) {
       console.error('Failed to complete task:', err);
     }
