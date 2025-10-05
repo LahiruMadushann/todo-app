@@ -62,4 +62,30 @@ public class TaskServiceTest {
         assertFalse(response.completed());
         verify(taskRepository, times(1)).save(any(Task.class));
     }
+
+    @Test
+    void getRecentTasks_ShouldReturnMaxFiveTasks() {
+        List<Task> tasks = Arrays.asList(
+                task,
+                Task.builder()
+                        .id(2L)
+                        .title("Task 2")
+                        .description("Description 2")
+                        .completed(false)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        when(taskRepository.findByCompletedFalseOrderByCreatedAtDesc(any(Pageable.class)))
+                .thenReturn(tasks);
+
+        List<TaskResponse> responses = taskService.getRecentTasks();
+
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+        assertEquals("Test Task", responses.get(0).title());
+        assertEquals("Task 2", responses.get(1).title());
+        verify(taskRepository, times(1))
+                .findByCompletedFalseOrderByCreatedAtDesc(PageRequest.of(0, 5));
+    }
 }

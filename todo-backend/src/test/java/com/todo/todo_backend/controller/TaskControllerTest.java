@@ -16,6 +16,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -89,5 +91,29 @@ public class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getRecentTasks_ShouldReturnTaskList() throws Exception {
+        List<TaskResponse> tasks = Arrays.asList(
+                taskResponse,
+                TaskResponse.builder()
+                        .id(2L)
+                        .title("Task 2")
+                        .description("Description 2")
+                        .completed(false)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        when(taskService.getRecentTasks()).thenReturn(tasks);
+
+        mockMvc.perform(get("/api/v1/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].title").value("Test Task"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].title").value("Task 2"));
     }
 }
