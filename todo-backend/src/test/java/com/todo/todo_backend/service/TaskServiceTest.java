@@ -88,4 +88,31 @@ public class TaskServiceTest {
         verify(taskRepository, times(1))
                 .findByCompletedFalseOrderByCreatedAtDesc(PageRequest.of(0, 5));
     }
+
+    @Test
+    void markAsCompleted_ShouldUpdateTaskStatus() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> {
+            Task savedTask = invocation.getArgument(0);
+            savedTask.setId(1L);
+            return savedTask;
+        });
+
+        TaskResponse response = taskService.markAsCompleted(1L);
+
+        assertNotNull(response);
+        assertTrue(response.completed());
+        assertNotNull(response.completedAt());
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).save(any(Task.class));
+    }
+
+    @Test
+    void markAsCompleted_WithInvalidId_ShouldThrowException() {
+        when(taskRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> taskService.markAsCompleted(999L));
+        verify(taskRepository, times(1)).findById(999L);
+        verify(taskRepository, never()).save(any(Task.class));
+    }
 }
