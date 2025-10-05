@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,5 +44,17 @@ public class TaskServiceImpl implements TaskService {
         return tasks.stream()
                 .map(taskMapper::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskResponse markAsCompleted(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+
+        task.setCompleted(true);
+        task.setCompletedAt(LocalDateTime.now());
+        Task updatedTask = taskRepository.save(task);
+
+        return taskMapper.mapToResponse(updatedTask);
     }
 }

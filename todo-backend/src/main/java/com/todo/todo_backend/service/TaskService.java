@@ -8,4 +8,5 @@ import java.util.List;
 public interface TaskService {
     TaskResponse createTask(TaskRequest request);
     List<TaskResponse> getRecentTasks();
+    TaskResponse markAsCompleted(Long id);
 }
