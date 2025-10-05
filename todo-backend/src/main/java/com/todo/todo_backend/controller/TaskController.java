@@ -19,19 +19,31 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {
-        TaskResponse response = taskService.createTask(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            TaskResponse response = taskService.createTask(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getRecentTasks() {
-        List<TaskResponse> tasks = taskService.getRecentTasks();
-        return ResponseEntity.ok(tasks);
+        try {
+            List<TaskResponse> tasks = taskService.getRecentTasks();
+            return ResponseEntity.ok(tasks);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @PutMapping("/{id}/complete")
     public ResponseEntity<TaskResponse> markAsCompleted(@PathVariable Long id) {
-        TaskResponse response = taskService.markAsCompleted(id);
-        return ResponseEntity.ok(response);
+        try {
+            TaskResponse response = taskService.markAsCompleted(id);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }
