@@ -28,4 +28,10 @@ public class TaskController {
         List<TaskResponse> tasks = taskService.getRecentTasks();
         return ResponseEntity.ok(tasks);
     }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<TaskResponse> markAsCompleted(@PathVariable Long id) {
+        TaskResponse response = taskService.markAsCompleted(id);
+        return ResponseEntity.ok(response);
+    }
 }
