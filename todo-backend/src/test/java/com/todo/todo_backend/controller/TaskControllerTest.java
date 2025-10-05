@@ -77,4 +77,17 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.description").value("Test Description"))
                 .andExpect(jsonPath("$.completed").value(false));
     }
+
+    @Test
+    void createTask_WithInvalidData_ShouldReturnBadRequest() throws Exception {
+        TaskRequest invalidRequest = TaskRequest.builder()
+                .title("")
+                .description("Test Description")
+                .build();
+
+        mockMvc.perform(post("/api/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
 }
