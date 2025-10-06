@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# Todo Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Technology Stack
 
-Currently, two official plugins are available:
+### Backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Language:** Java 17
+- **Framework:** Spring Boot 3.2.0
+- **ORM:** Spring Data JPA / Hibernate
+- **Database:** PostgreSQL 15
+- **Build Tool:** Maven
+- **Testing:** JUnit 5, Mockito
 
-## React Compiler
+### Frontend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Language:** TypeScript
+- **Framework:** React 19
+- **State Management:** Redux Toolkit
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS 4
+- **HTTP Client:** Axios
+- **Icons:** React Icons
+- **Testing:** Vitest, React Testing Library
 
-## Expanding the ESLint configuration
+### DevOps
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Containerization:** Docker
+- **Orchestration:** Docker Compose
+- **Web Server:** Nginx (for frontend)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Installation & Setup
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Step 1: Clone the Repository
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <repository-url>
+cd todo-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Step 2: Verify Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Ensure you have the following directories:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `todo-backend/` with Dockerfile and pom.xml
+- `frontend/` with Dockerfile and package.json
+- `docker-compose.yml` at the root
+
+## Running the Application
+
+### Option 1: Using Docker Compose
+
+Start all services:
+
+```bash
+docker-compose up --build -d
+```
+
+After build successfully go to http://localhost:5173/
+
+### Option 2: Development Mode (Without Docker)
+
+**Backend:**
+
+```bash
+cd todo-backend
+mvn spring-boot:run
+```
+
+**Frontend:**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+After run successfully go to http://localhost:5173/
+
+## Testing
+
+### Testing in Docker
+
+**Backend tests:**
+
+```bash
+docker-compose run --rm backend mvn test
+```
+
+**Frontend tests:**
+
+```bash
+docker-compose run --rm frontend npm test
+```
+
+### Testing in Development Mode (Without Docker)
+
+**Backend tests:**
+
+```bash
+cd todo-backend
+mvn test
+mvn clean test jacoco:report
+```
+
+**Frontend tests:**
+
+```bash
+cd frontend
+npm test
+npm run test:coverage
 ```
