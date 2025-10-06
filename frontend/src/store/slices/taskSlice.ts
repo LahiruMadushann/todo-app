@@ -84,7 +84,7 @@ const taskSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(createTask.fulfilled, (state, action: PayloadAction<Task>) => {
+    builder.addCase(createTask.fulfilled, (state) => {
       state.loading = false;
       state.successMessage = 'Task created successfully!';
     });
